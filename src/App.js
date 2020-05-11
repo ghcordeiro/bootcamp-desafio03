@@ -13,15 +13,14 @@ function App() {
   }, []);
 
   async function handleAddRepository() {
-    const response = await api.post('/repositories', {
-        title: "Frontend GoStack",
-        url: "https://github.com/ghcodeiro/fronted-gostack",
-        techs: ["JavaScript", "ReactJS"]
+    const repository = {
+      title: `New repository ${Date.now()}`,
+      url:"https://github.com/ghcodeiro/fronted-gostack",
+      techs: ["ReactJS", "NodeJS", "Express"],
+    };
+    api.post('/repositories', repository).then((response) => {
+      setRepos([...repos, response.data.repo]);
     });
-    console.log(response.status);
-    console.log(response.data);
-
-    setRepos([...repos, response.data.repo]);
   }
 
   async function handleRemoveRepository(id) {
