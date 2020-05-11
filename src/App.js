@@ -15,7 +15,7 @@ function App() {
   async function handleAddRepository() {
     const repository = {
       title: `New repository ${Date.now()}`,
-      url:"https://github.com/ghcodeiro/fronted-gostack",
+      url: "https://github.com/ghcodeiro/fronted-gostack",
       techs: ["ReactJS", "NodeJS", "Express"],
     };
     api.post('/repositories', repository).then((response) => {
@@ -24,23 +24,35 @@ function App() {
   }
 
   async function handleRemoveRepository(id) {
-    await api.delete(`repositories/${id}`);
+    const repositoryIndex = repos.findIndex((repository) => repository.id === id);
 
-    const updatedRepos = repos.filter(repo => repo.id !== id);
-
-    setRepos(updatedRepos);
+    if (repositoryIndex < 0) {
+      return console.log("Error: Not found repository");
+    }
+    api.delete(`repositories/${id}`).then(() => {
+      setRepos([
+        ...repos.slice(0, repositoryIndex),
+        ...repos.slice(repositoryIndex + 1),
+      ]);
+    });
   }
 
   return (
     <div>
-      {repos.map((repo) => (
-        <li key={repo.id}>
-          {repo.title}
-          <button onClick={() => handleRemoveRepository(repo.id)}>
-            Remover
+      <ul data-testid="repository-list">
+        {repos.map((repository) => (
+          <li key={repository.id}>
+            {repository.title}
+            <button
+              onClick={() => {
+                handleRemoveRepository(repository.id);
+              }}
+            >
+              Remover
             </button>
-        </li>
-      ))}
+          </li>
+        ))}
+      </ul>
 
       <button onClick={handleAddRepository}>Adicionar</button>
     </div>
