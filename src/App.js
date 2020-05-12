@@ -19,7 +19,7 @@ function App() {
       techs: ["ReactJS", "NodeJS", "Express"],
     };
     api.post('/repositories', repository).then((response) => {
-      setRepos([...repos, response.data.repo]);
+      setRepos([...repos, response.data]);
     });
   }
 
@@ -27,7 +27,6 @@ function App() {
     const repositoryIndex = repos.findIndex((repository) => repository.id === id);
 
     if (repositoryIndex < 0) {
-      return console.log("Error: Not found repository");
     }
     api.delete(`repositories/${id}`).then(() => {
       setRepos([
@@ -46,9 +45,7 @@ function App() {
             <button
               onClick={() => {
                 handleRemoveRepository(repository.id);
-              }}
-            >
-              Remover
+              }}> Remover
             </button>
           </li>
         ))}
